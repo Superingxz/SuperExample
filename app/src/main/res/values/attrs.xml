@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="InputEditTextView">
+        <attr name="hint" format="string" />
+    </declare-styleable>
+
+    <attr name="text_size" format="dimension" />
+    <attr name="scale_color" format="color" />
+    <attr name="stroke_width" format="dimension" />
+    <attr name="scale_stroke_width" format="dimension" />
+    <attr name="anim_time" format="integer" />
+
+    <declare-styleable name="ScaleDialView">
+        <attr name="text_size" />
+        <attr name="scale_color" />
+        <attr name="stroke_width" />
+        <attr name="scale_stroke_width" />
+        <attr name="anim_time" />
+    </declare-styleable>
+</resources>
