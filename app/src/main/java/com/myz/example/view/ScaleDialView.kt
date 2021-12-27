@@ -367,16 +367,39 @@ class ScaleDialView : View {
 
         canvas?.rotate(60f)
 
+        // 三分之二位置刻度值
+        val textWidthTwoThirdLengthHalf =
+            paintDegree.measureText(((maxValue / 3) * 2).toString()) / 2f
         canvas?.drawText(
             ((maxValue / 3) * 2).toString(),
-            -textWidthOneThirdLengthHalf,
+            -textWidthTwoThirdLengthHalf,
             -(mRealRadius.toFloat() - strokeWidth.toFloat() - dp2px(25) - scaleMargin + innerStrokeWidth + dp2px(
                 5
             )),
             paintDegree
         )
 
-        canvas?.rotate(-60f)
+        canvas?.rotate(-30f)
+
+        // 0位置刻度值
+        canvas?.drawText(
+            "0",
+            -(mRealRadius - strokeWidth - dp2px(
+                5
+            )).toFloat(),
+            dp2px(5).toFloat(),
+            paintDegree
+        )
+
+        // 最大值位置刻度值
+        canvas?.drawText(
+            maxValue.toString(),
+            (mRealRadius - strokeWidth - scaleMargin - dp2px(22).toFloat() - dp2px(
+                5
+            )),
+            dp2px(15).toFloat(),
+            paintDegree
+        )
 
         canvas?.restore()
     }
