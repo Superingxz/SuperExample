@@ -17,5 +17,12 @@
         <attr name="stroke_width" />
         <attr name="scale_stroke_width" />
         <attr name="anim_time" />
+        <attr name="scale_margin" />
+        <attr name="scale_stroke_width_large" />
+        <attr name="inner_color1" />
+        <attr name="inner_color2" />
+        <attr name="inner_color3" />
+        <attr name="inner_stroke_width" />
+        <attr name="scale_inner_margin" />
     </declare-styleable>
 </resources>
