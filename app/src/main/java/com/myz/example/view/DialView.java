@@ -76,12 +76,12 @@ public class DialView extends View {
 
     //初始化属性
     private void initAttrs(Context context, AttributeSet attrs) {
-        TypedArray attributes = context.obtainStyledAttributes(attrs, R.styleable.ScaleView);
-        textSize = (int) attributes.getDimension(R.styleable.ScaleView_text_size, sp2px(DEFAULT_TEXT_SIZE));
-        scaleColor = attributes.getColor(R.styleable.ScaleView_scale_color, Color.parseColor("#6D77F5"));
-        strokeWidth = (int) attributes.getDimension(R.styleable.ScaleView_stroke_width, dp2px(DEFAULT_STROKE_WIDTH));
-        scaleStrokeWidth = (int) attributes.getDimension(R.styleable.ScaleView_scale_stroke_width, dp2px(DEFAULT_SCALE_STROKE_WIDTH));
-        animTime = attributes.getInteger(R.styleable.ScaleView_anim_time, DEFAULT_ANIM_TIME) * 1000;
+        TypedArray attributes = context.obtainStyledAttributes(attrs, R.styleable.ScaleDialView);
+        textSize = (int) attributes.getDimension(R.styleable.ScaleDialView_text_size, sp2px(DEFAULT_TEXT_SIZE));
+        scaleColor = attributes.getColor(R.styleable.ScaleDialView_scale_color, Color.parseColor("#6D77F5"));
+        strokeWidth = (int) attributes.getDimension(R.styleable.ScaleDialView_stroke_width, dp2px(DEFAULT_STROKE_WIDTH));
+        scaleStrokeWidth = (int) attributes.getDimension(R.styleable.ScaleDialView_scale_stroke_width, dp2px(DEFAULT_SCALE_STROKE_WIDTH));
+        animTime = attributes.getInteger(R.styleable.ScaleDialView_anim_time, DEFAULT_ANIM_TIME) * 1000;
         attributes.recycle();
     }
 

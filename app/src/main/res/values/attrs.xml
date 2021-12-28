@@ -10,8 +10,15 @@
     <attr name="stroke_width" format="dimension" />
     <attr name="scale_stroke_width" format="dimension" />
     <attr name="anim_time" format="integer" />
+    <attr name="scale_margin" format="dimension" />
+    <attr name="scale_stroke_width_large" format="dimension" />
+    <attr name="inner_color1" format="color" />
+    <attr name="inner_color2" format="color" />
+    <attr name="inner_color3" format="color" />
+    <attr name="inner_stroke_width" format="dimension" />
+    <attr name="scale_inner_margin" format="dimension" />
 
-    <declare-styleable name="ScaleView">
+    <declare-styleable name="ScaleDialView">
         <attr name="text_size" />
         <attr name="scale_color" />
         <attr name="stroke_width" />
