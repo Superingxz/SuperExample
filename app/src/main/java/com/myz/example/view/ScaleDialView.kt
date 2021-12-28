@@ -2,10 +2,7 @@ package com.myz.example.view
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
-import android.graphics.RectF
+import android.graphics.*
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.View
@@ -48,6 +45,8 @@ class ScaleDialView : View {
     private var scaleInnerMargin: Float = 0f // 刻度内边距
     private lateinit var mRect: RectF // 外环
     private lateinit var borderPaint: Paint
+    private lateinit var borderGradientRightPaint: Paint
+    private lateinit var borderGradientLeftPaint: Paint
     private lateinit var bgPaint: Paint
     private lateinit var textPaint: Paint
     private lateinit var titlePaint: Paint
@@ -160,6 +159,16 @@ class ScaleDialView : View {
         borderPaint.style = Paint.Style.STROKE
         borderPaint.strokeWidth = strokeWidth.toFloat()
         borderPaint.color = scaleColor
+
+        borderGradientLeftPaint = Paint()
+        borderGradientLeftPaint.isAntiAlias = true
+        borderGradientLeftPaint.style = Paint.Style.STROKE
+        borderGradientLeftPaint.strokeWidth = strokeWidth.toFloat()
+
+        borderGradientRightPaint = Paint()
+        borderGradientRightPaint.isAntiAlias = true
+        borderGradientRightPaint.style = Paint.Style.STROKE
+        borderGradientRightPaint.strokeWidth = strokeWidth.toFloat()
 
         bgPaint = Paint(Paint.ANTI_ALIAS_FLAG)
         bgPaint.style = Paint.Style.FILL
@@ -287,8 +296,35 @@ class ScaleDialView : View {
             (paddingLeft + radiusDial).toFloat(),
             (paddingTop + radiusDial).toFloat()
         )
-        canvas?.drawArc(mRect, 180f, 180f, false, borderPaint)
+//        canvas?.drawArc(mRect, 180f, 180f, false, borderPaint)
 
+        val colors = intArrayOf(
+            Color.parseColor("#ffffff"),
+            Color.parseColor("#1a1a1a")
+        )
+
+        val colors1 = intArrayOf(
+            Color.parseColor("#1a1a1a"),
+            Color.parseColor("#ffffff")
+        )
+
+        val colors2 = intArrayOf(
+            Color.parseColor("#ffffff"),
+            Color.parseColor("#1a1a1a"),
+            Color.parseColor("#1a1a1a"),
+            Color.parseColor("#ffffff")
+        )
+
+        val colors3 = intArrayOf(
+            Color.GREEN,
+            Color.BLUE
+        )
+
+        borderGradientLeftPaint.shader = SweepGradient(0f, 0f, colors1, null)
+        canvas?.drawArc(mRect, 270f, -90f, false, borderGradientLeftPaint)
+
+        borderGradientRightPaint.shader = SweepGradient(0f, 0f, colors1, null)
+        canvas?.drawArc(mRect, 0f, -90f, false, borderGradientRightPaint)
 
         // 刻度
         canvas?.translate(
@@ -339,7 +375,13 @@ class ScaleDialView : View {
         canvas?.drawArc(mInnerRect, 300f, 60f, false, innerPaint3)
 
         // 内环灰色半圈
-        canvas?.drawArc(mInnerGrayRect, 180f, 180f, false, borderPaint)
+//        canvas?.drawArc(mInnerGrayRect, 180f, 180f, false, borderPaint)
+
+        borderGradientLeftPaint.shader = SweepGradient(0f, 0f, colors1, null)
+        canvas?.drawArc(mInnerGrayRect, 180f, 90f, false, borderGradientLeftPaint)
+
+        borderGradientRightPaint.shader = SweepGradient(0f, 0f, colors, null)
+        canvas?.drawArc(mInnerGrayRect, 270f, 90f, false, borderGradientRightPaint)
 
         // 绘制左右半圆
         drawHalfCircle(canvas)
