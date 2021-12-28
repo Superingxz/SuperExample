@@ -55,6 +55,9 @@ class ScaleDialView : View {
     private lateinit var innerPaint2: Paint // 内环2
     private lateinit var innerPaint3: Paint // 内环3
     private lateinit var mInnerRect: RectF // 内环
+    private lateinit var innerLeftPaint: Paint // 内环左边
+    private lateinit var innerRightPaint: Paint // 内环右边
+    private lateinit var mInnerGrayRect: RectF
 
     private lateinit var circlePaint: Paint // 圆心
 
@@ -86,62 +89,62 @@ class ScaleDialView : View {
      * 属性
      */
     private fun initAttrs(context: Context, attrs: AttributeSet) {
-        val attributes = context.obtainStyledAttributes(attrs, R.styleable.ScaleDialView)
+        val attributes = context.obtainStyledAttributes(attrs, R.styleable.ScaleView)
         textSize = attributes.getDimension(
-            R.styleable.ScaleDialView_text_size,
+            R.styleable.ScaleView_text_size,
             sp2px(DEFAULT_TEXT_SIZE).toFloat()
         )
             .toInt()
         scaleColor =
             attributes.getColor(
-                R.styleable.ScaleDialView_scale_color,
+                R.styleable.ScaleView_scale_color,
                 Color.parseColor("#C4C5CD")
             )
         strokeWidth = attributes.getDimension(
-            R.styleable.ScaleDialView_stroke_width,
+            R.styleable.ScaleView_stroke_width,
             dp2px(DEFAULT_STROKE_WIDTH).toFloat()
         )
             .toInt()
         scaleMargin =
             attributes.getDimension(
-                R.styleable.ScaleDialView_scale_margin,
+                R.styleable.ScaleView_scale_margin,
                 dp2px(DEFAULT_SCALE_MARGIN).toFloat()
             )
         scaleStrokeWidth =
             attributes.getDimension(
-                R.styleable.ScaleDialView_scale_stroke_width,
+                R.styleable.ScaleView_scale_stroke_width,
                 dp2px(DEFAULT_SCALE_STROKE_WIDTH).toFloat()
             )
                 .toInt()
         scaleStrokeWidthLarge =
             attributes.getDimension(
-                R.styleable.ScaleDialView_scale_stroke_width_large,
+                R.styleable.ScaleView_scale_stroke_width_large,
                 dp2px(DEFAULT_SCALE_STROKE_WIDTH_LARGE).toFloat()
             )
                 .toInt()
         innerColor1 =
             attributes.getColor(
-                R.styleable.ScaleDialView_inner_color1,
+                R.styleable.ScaleView_inner_color1,
                 Color.parseColor("#3BA6DD")
             )
         innerColor2 =
             attributes.getColor(
-                R.styleable.ScaleDialView_inner_color2,
+                R.styleable.ScaleView_inner_color2,
                 Color.parseColor("#52CC52")
             )
         innerColor3 =
             attributes.getColor(
-                R.styleable.ScaleDialView_inner_color3,
+                R.styleable.ScaleView_inner_color3,
                 Color.parseColor("#FF7E2D")
             )
         innerStrokeWidth =
             attributes.getDimension(
-                R.styleable.ScaleDialView_inner_stroke_width,
+                R.styleable.ScaleView_inner_stroke_width,
                 dp2px(DEFAULT_INNER_STROKE_WIDTH).toFloat()
             )
         scaleInnerMargin =
             attributes.getDimension(
-                R.styleable.ScaleDialView_scale_inner_margin,
+                R.styleable.ScaleView_scale_inner_margin,
                 dp2px(DEFAULT_SCALE_INNER_MARGIN).toFloat()
             )
         attributes.recycle()
@@ -190,6 +193,16 @@ class ScaleDialView : View {
         innerPaint3.isAntiAlias = true
         innerPaint3.color = innerColor3
         innerPaint3.strokeWidth = innerStrokeWidth
+
+        innerLeftPaint = Paint()
+        innerLeftPaint.style = Paint.Style.FILL
+        innerLeftPaint.isAntiAlias = true
+        innerLeftPaint.color = innerColor1
+
+        innerRightPaint = Paint()
+        innerRightPaint.style = Paint.Style.FILL
+        innerRightPaint.isAntiAlias = true
+        innerRightPaint.color = innerColor3
 
         scaleProgressPaint = Paint()
         scaleProgressPaint.isAntiAlias = true
@@ -240,10 +253,17 @@ class ScaleDialView : View {
             mRealRadius.toFloat(), mRealRadius.toFloat()
         )
         val offset: Int =
-            strokeWidth + dp2px(25) + scaleMargin.toInt() * 2 + scaleInnerMargin.toInt()
+            strokeWidth + dp2px(25) + (scaleMargin.toInt() * 1.75f).toInt() + scaleInnerMargin.toInt()
         mInnerRect = RectF(
             (-mRealRadius + offset).toFloat(), (-mRealRadius + offset).toFloat(),
             (mRealRadius - offset).toFloat(), (mRealRadius - offset).toFloat()
+        )
+
+        mInnerGrayRect = RectF(
+            (-mRealRadius.toFloat() + offset.toFloat() + innerStrokeWidth / 2f + dp2px(8)),
+            (-mRealRadius.toFloat() + offset.toFloat() + innerStrokeWidth / 2f + dp2px(8)),
+            (mRealRadius.toFloat() - offset.toFloat() - innerStrokeWidth / 2f - dp2px(8)),
+            (mRealRadius.toFloat() - offset.toFloat() - innerStrokeWidth / 2f - dp2px(8))
         )
     }
 
@@ -275,7 +295,7 @@ class ScaleDialView : View {
         )
         for (i in 0..15) {
             val paintDegree = Paint()
-            paintDegree.color = scaleColor
+            paintDegree.color = Color.parseColor("#ff666666")
             if (i % 5 == 0) {
                 paintDegree.strokeWidth = dp2px(scaleStrokeWidthLarge).toFloat()
                 paintDegree.textSize = sp2px(15).toFloat()
@@ -325,6 +345,12 @@ class ScaleDialView : View {
         canvas?.drawArc(mInnerRect, 240f, 60f, false, innerPaint2)
         canvas?.drawArc(mInnerRect, 300f, 60f, false, innerPaint3)
 
+        // 内环灰色半圈
+        canvas?.drawArc(mInnerGrayRect, 180f, 180f, false, borderPaint)
+
+        // 绘制左右半圆
+        drawHalfCircle(canvas)
+
         // 绘制中间文本
         val textBaseLine =
             (0 + (textPaint.fontMetrics!!.bottom - textPaint.fontMetrics!!.top) / 2 - textPaint.fontMetrics!!.bottom).toInt() - dp2px(
@@ -338,6 +364,49 @@ class ScaleDialView : View {
         )
     }
 
+    /**
+     * 绘制左右半圆
+     */
+    private fun drawHalfCircle(canvas: Canvas?) {
+        canvas?.save()
+
+        // 内环左边偏移量
+        val offset: Int =
+            strokeWidth + dp2px(26) + (scaleMargin.toInt() * 1.75f).toInt() + scaleInnerMargin.toInt()
+
+        // 左半圆
+        canvas?.translate(
+            -(paddingLeft.toFloat() + radiusDial.toFloat()) + offset,
+            0f
+        )
+
+        val halfRectLeft = RectF(
+            -innerStrokeWidth / 2f,
+            -innerStrokeWidth / 2f,
+            innerStrokeWidth / 2f,
+            innerStrokeWidth / 2f
+        )
+
+        canvas?.drawArc(halfRectLeft, 0f, 180f, true, innerLeftPaint)
+
+        // 右半圆
+        canvas?.translate(
+            ((paddingLeft.toFloat() + radiusDial.toFloat()) - offset) * 2f,
+            0f
+        )
+
+        val halfRectRight = RectF(
+            -innerStrokeWidth / 2f,
+            -innerStrokeWidth / 2f,
+            innerStrokeWidth / 2f,
+            innerStrokeWidth / 2f
+        )
+
+        canvas?.drawArc(halfRectRight, 0f, 180f, true, innerRightPaint)
+
+        canvas?.restore()
+    }
+
     private fun drawScaleNumber(canvas: Canvas?) {
         canvas?.save()
 
@@ -347,7 +416,7 @@ class ScaleDialView : View {
         )
 
         val paintDegree = Paint()
-        paintDegree.color = scaleColor
+        paintDegree.color = Color.parseColor("#ff666666")
         paintDegree.strokeWidth = dp2px(scaleStrokeWidthLarge).toFloat()
         paintDegree.textSize = sp2px(15).toFloat()
 

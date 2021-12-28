@@ -11,7 +11,7 @@
     <attr name="scale_stroke_width" format="dimension" />
     <attr name="anim_time" format="integer" />
 
-    <declare-styleable name="ScaleDialView">
+    <declare-styleable name="ScaleView">
         <attr name="text_size" />
         <attr name="scale_color" />
         <attr name="stroke_width" />
